@@ -1,0 +1,57 @@
+version: "3.8"
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: interviewlens_db
+    restart: always
+    environment:
+      POSTGRES_USER: interviewlens
+      POSTGRES_PASSWORD: interviewlens_password
+      POSTGRES_DB: interviewlens
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U interviewlens -d interviewlens"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: interviewlens_backend
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://interviewlens:interviewlens_password@db:5432/interviewlens
+      - SECRET_KEY=interviewlens-docker-production-secret-key-replace-2026
+      - STORAGE_DIR=/app/storage/uploads
+      - AI_PROVIDER=mock
+    volumes:
+      - uploads_data:/app/storage/uploads
+      - ./backend:/app
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: interviewlens_frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+
+volumes:
+  postgres_data:
+  uploads_data:
