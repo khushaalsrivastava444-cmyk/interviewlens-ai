@@ -71,9 +71,10 @@ CATEGORY_RUBRIC_SPECIFICATIONS: Dict[str, Dict[str, Any]] = {
             "schema_design",
         ],
         "keywords": {
-            "indexing": ["index", "b-tree", "composite index", "explain analyze", "scan"],
-            "acid": ["acid", "transaction", "isolation level", "atomicity", "consistency"],
-            "joins": ["inner join", "left join", "group by", "aggregation", "foreign key"],
+            "query_optimization": ["selectivity", "sequential scan", "cost", "planner", "explain analyze", "scan"],
+            "indexing_structure": ["b-tree", "composite index", "index", "indexes", "hash index", "bitmap"],
+            "acid_transactions": ["acid", "transaction", "isolation level", "atomicity", "consistency", "wal"],
+            "schema_and_joins": ["inner join", "left join", "foreign key", "normalization", "cardinality"],
         },
         "default_follow_up": "When would a B-tree index not be utilized by the PostgreSQL query planner even if the column is indexed?",
     },
@@ -227,7 +228,9 @@ class AnswerEvaluationEngine:
         total_topics = max(len(keyword_dict), 1)
 
         for topic_name, phrases in keyword_dict.items():
-            matched_phrase = next((p for p in phrases if p in answer_lower), None)
+            matched_phrase = next(
+                (p for p in phrases if re.search(rf"\b{re.escape(p)}\b", answer_lower)), None
+            )
             if matched_phrase:
                 covered_topics += 1
                 evidence_sentence = next(

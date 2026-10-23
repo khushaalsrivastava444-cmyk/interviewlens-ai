@@ -320,3 +320,44 @@ export interface LearningPlan {
   milestones: LearningMilestone[];
   created_at: string;
 }
+
+// --- Phase 7: RAG Retrieval, Grounding & Benchmark Calibration Types ---
+
+export interface RetrievalResult {
+  chunk_id: string;
+  category: string;
+  topic: string;
+  title: string;
+  content: string;
+  similarity_score: number;
+  lexical_score: number;
+  hybrid_score: number;
+  key_mechanisms: string[];
+}
+
+export interface GroundingEvaluation {
+  semantic_coverage: number;
+  covered_mechanisms: string[];
+  omitted_mechanisms: string[];
+  authoritative_citations: string[];
+  factual_consistency_feedback: string;
+}
+
+export interface BenchmarkRunResult {
+  total_cases: number;
+  monotonic_score_pass_rate: number;
+  gap_detection_accuracy: number;
+  grounding_accuracy: number;
+  mean_evaluation_latency_ms: number;
+  detailed_results: {
+    category: string;
+    high_score: number;
+    medium_score: number;
+    low_score: number;
+    monotonic: boolean;
+    grounding_coverage: number;
+    low_tier_gaps_detected: number;
+    expected_gaps: number;
+  }[];
+  calibration_status: string;
+}
