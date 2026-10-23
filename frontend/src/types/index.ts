@@ -238,3 +238,85 @@ export interface SessionReport {
   questions_evaluations: QuestionEvaluationDetail[];
   created_at: string;
 }
+
+// --- Phase 6: Resume Intelligence & Job Description Alignment Types ---
+
+export interface ParsedProject {
+  name: string;
+  description: string;
+  technologies: string[];
+  metrics: string[];
+  highlights: string[];
+}
+
+export interface ParsedExperience {
+  title: string;
+  company?: string;
+  duration?: string;
+  responsibilities: string[];
+}
+
+export interface ParsedEducation {
+  degree: string;
+  institution?: string;
+  year?: string;
+}
+
+export interface Resume {
+  id: string;
+  user_id: string;
+  filename: string;
+  extracted_text: string;
+  parsed_skills: string[];
+  skills_by_category: Record<string, string[]>;
+  parsed_projects: ParsedProject[];
+  parsed_experience: ParsedExperience[];
+  parsed_education: ParsedEducation[];
+  created_at: string;
+}
+
+export interface JobDescriptionMatchResponse {
+  match_score: number;
+  matched_skills: string[];
+  missing_critical_skills: string[];
+  preferred_skills_found: string[];
+  ats_recommendations: string[];
+  recommended_interview_categories: string[];
+}
+
+export interface ProjectDefenseQuestion {
+  id: string;
+  project_name: string;
+  question_text: string;
+  technical_focus: string;
+  sample_expected_topics: string[];
+}
+
+export interface ProjectDefenseResponse {
+  resume_id: string;
+  candidate_name?: string;
+  questions: ProjectDefenseQuestion[];
+}
+
+export interface LearningMilestone {
+  phase: string;
+  title: string;
+  focus_areas: string[];
+  recommended_practice: string;
+}
+
+export interface LearningPlan {
+  id: string;
+  user_id: string;
+  session_id?: string;
+  target_role: string;
+  identified_gaps: string[];
+  recommended_topics: string[];
+  practice_questions: {
+    topic: string;
+    question: string;
+    difficulty: string;
+  }[];
+  milestones: LearningMilestone[];
+  created_at: string;
+}

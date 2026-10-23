@@ -1,0 +1,29 @@
+
+Alex Mercer
+alex.mercer@example.com | (555) 234-5678 | San Francisco, CA
+
+SUMMARY
+Senior ML Engineer with 4+ years of experience designing and deploying scalable deep learning pipelines, RAG systems, and distributed backend microservices.
+
+SKILLS
+Languages: Python, SQL, TypeScript, Bash, C++
+ML & Frameworks: PyTorch, TensorFlow, Scikit-learn, Pandas, NumPy, Hugging Face
+NLP & LLMs: Transformers, RAG, LangChain, Vector DB, FAISS, Embeddings
+Data & Backend: PostgreSQL, Redis, Kafka, FastAPI, Docker, Kubernetes, AWS, CI/CD
+
+PROJECTS
+InterviewLens AI | Python, FastAPI, PyTorch, Next.js, Redis
+- Designed and built multimodal AI mock interview coach analyzing audio acoustics and candidate transcripts.
+- Reduced inference latency by 45% using ONNX runtime and caching frequent embedding lookups in Redis.
+- Implemented stateful adaptive question generation engine supporting 10 distinct technical categories.
+
+Dense Passage Retrieval Search Engine | PyTorch, Transformers, FAISS, PostgreSQL
+- Built hybrid neural search pipeline indexing over 2 million technical documents with 94.2% top-5 recall.
+- Optimized vector similarity search throughput to 1200 QPS with sub-25ms response latency under peak load.
+
+EXPERIENCE
+Machine Learning Engineer | NovaAI Systems | 2022 - Present
+- Deployed real-time recommendation models serving 500k daily active users on AWS Kubernetes.
+
+EDUCATION
+B.S. in Computer Science | University of California, Berkeley | 2018 - 2022

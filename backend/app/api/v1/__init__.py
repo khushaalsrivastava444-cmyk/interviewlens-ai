@@ -7,6 +7,7 @@ from app.api.v1.transcripts import router as transcripts_router
 from app.api.v1.evaluations import router as evaluations_router
 from app.api.v1.audio_analytics import router as audio_router
 from app.api.v1.interviews import router as interviews_router
+from app.api.v1.resumes import router as resumes_router
 
 api_router = APIRouter()
 api_router.include_router(health_router, tags=["Health"])
@@ -17,3 +18,4 @@ api_router.include_router(transcripts_router, prefix="/transcripts", tags=["Tran
 api_router.include_router(evaluations_router, prefix="/evaluations", tags=["Evaluations"])
 api_router.include_router(audio_router, prefix="/audio-analytics", tags=["Audio Analytics"])
 api_router.include_router(interviews_router, prefix="/interviews", tags=["Interviews"])
+api_router.include_router(resumes_router, prefix="/resumes", tags=["Resume Intelligence"])

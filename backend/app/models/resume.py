@@ -37,6 +37,7 @@ class LearningPlan(Base):
     identified_gaps = Column(JSON, default=list, nullable=False)
     recommended_topics = Column(JSON, default=list, nullable=False)
     practice_questions = Column(JSON, default=list, nullable=False)
+    milestones = Column(JSON, default=list, nullable=True)
 
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
 
