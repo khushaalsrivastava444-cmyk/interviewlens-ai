@@ -23,6 +23,7 @@ from app.schemas.resume import (
     LearningMilestone,
 )
 from app.services.resume_service import resume_intelligence_service
+from app.core.security_middleware import assert_safe_path
 
 router = APIRouter()
 
@@ -100,14 +101,15 @@ async def upload_and_parse_resume(
     # 3. Save file on disk
     saved_filename = f"{current_user.id}_{str(uuid.uuid4())[:8]}_{file.filename}"
     storage_path = os.path.join(STORAGE_DIR, saved_filename)
-    with open(storage_path, "wb") as f:
+    safe_path = assert_safe_path(storage_path, STORAGE_DIR)
+    with open(safe_path, "wb") as f:
         f.write(file_bytes)
 
     # 4. Save Resume in database
     resume = Resume(
         user_id=current_user.id,
         filename=file.filename,
-        storage_path=storage_path,
+        storage_path=safe_path,
         extracted_text=extracted_text,
         parsed_skills=parsed_skills,
         parsed_projects=[p.model_dump() for p in projects],

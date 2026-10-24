@@ -25,6 +25,7 @@ from app.models.video import UploadedVideo, ProcessingJob
 from app.schemas.video import VideoResponse, VideoStatusResponse, ProcessingJobResponse
 from app.services.video_service import video_service, VideoProcessingError
 from app.services.background_worker import process_video_job
+from app.core.security_middleware import assert_safe_path
 
 router = APIRouter()
 
@@ -212,12 +213,13 @@ def stream_video(
     if not os.path.exists(video.storage_path):
         raise HTTPException(status_code=404, detail="Video file does not exist on disk.")
 
-    file_size = os.path.getsize(video.storage_path)
+    safe_video_path = assert_safe_path(video.storage_path, settings.STORAGE_DIR)
+    file_size = os.path.getsize(safe_video_path)
     range_header = request.headers.get("range")
 
     if not range_header:
         return FileResponse(
-            video.storage_path,
+            safe_video_path,
             media_type=video.mime_type,
             filename=video.original_filename,
         )
@@ -225,7 +227,7 @@ def stream_video(
     # Parse Range header: bytes=start-end
     range_match = re.match(r"bytes=(\d+)-(\d*)", range_header)
     if not range_match:
-        return FileResponse(video.storage_path, media_type=video.mime_type)
+        return FileResponse(safe_video_path, media_type=video.mime_type)
 
     start = int(range_match.group(1))
     end = int(range_match.group(2)) if range_match.group(2) else file_size - 1
@@ -235,7 +237,7 @@ def stream_video(
     length = end - start + 1
 
     def iterfile():
-        with open(video.storage_path, "rb") as f:
+        with open(safe_video_path, "rb") as f:
             f.seek(start)
             bytes_left = length
             chunk_size = 64 * 1024
@@ -272,7 +274,8 @@ def stream_audio(
     if not video.audio_path or not os.path.exists(video.audio_path):
         raise HTTPException(status_code=404, detail="Extracted audio track not found.")
 
-    return FileResponse(video.audio_path, media_type="audio/wav")
+    safe_audio_path = assert_safe_path(video.audio_path, settings.STORAGE_DIR)
+    return FileResponse(safe_audio_path, media_type="audio/wav")
 
 
 @router.get("/{video_id}/thumbnail")
@@ -290,7 +293,8 @@ def get_thumbnail(
     if not video.thumbnail_path or not os.path.exists(video.thumbnail_path):
         raise HTTPException(status_code=404, detail="Thumbnail not available.")
 
-    return FileResponse(video.thumbnail_path, media_type="image/jpeg")
+    safe_thumb_path = assert_safe_path(video.thumbnail_path, settings.STORAGE_DIR)
+    return FileResponse(safe_thumb_path, media_type="image/jpeg")
 
 
 @router.post("/{video_id}/retry", response_model=VideoStatusResponse)

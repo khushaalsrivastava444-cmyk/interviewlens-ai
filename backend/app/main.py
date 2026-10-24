@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 from app.core.config import settings
 from app.database import init_db
 from app.api.v1 import api_router
+from app.core.security_middleware import SecurityHeadersMiddleware, RateLimitMiddleware
 
 
 @asynccontextmanager
@@ -24,6 +25,10 @@ app = FastAPI(
     redoc_url=f"{settings.API_V1_STR}/redoc",
     lifespan=lifespan,
 )
+
+# Security Headers & Rate Limiting Middleware
+app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(RateLimitMiddleware)
 
 # CORS configuration
 app.add_middleware(
