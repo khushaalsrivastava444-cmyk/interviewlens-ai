@@ -1,4 +1,10 @@
 /** @type {import('next').NextConfig} */
+const backendTarget =
+  process.env.BACKEND_INTERNAL_URL ||
+  (process.env.NEXT_PUBLIC_API_URL
+    ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/v1\/?$/, "")
+    : "http://127.0.0.1:8000");
+
 const nextConfig = {
   output: "standalone",
   reactStrictMode: true,
@@ -6,7 +12,7 @@ const nextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: "http://127.0.0.1:8000/api/:path*",
+        destination: `${backendTarget}/api/:path*`,
       },
     ];
   },
