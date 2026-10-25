@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const backendTarget =
+  process.env.BACKEND_SERVICE_URL ||
   process.env.BACKEND_INTERNAL_URL ||
   (process.env.NEXT_PUBLIC_API_URL
     ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/v1\/?$/, "")

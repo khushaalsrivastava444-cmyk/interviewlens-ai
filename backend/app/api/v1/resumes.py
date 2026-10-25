@@ -24,11 +24,15 @@ from app.schemas.resume import (
 )
 from app.services.resume_service import resume_intelligence_service
 from app.core.security_middleware import assert_safe_path
+from app.core.config import settings
 
 router = APIRouter()
 
-STORAGE_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "storage", "resumes")
-os.makedirs(STORAGE_DIR, exist_ok=True)
+STORAGE_DIR = settings.RESUME_STORAGE_DIR
+try:
+    os.makedirs(STORAGE_DIR, exist_ok=True)
+except Exception:
+    pass
 
 
 def _serialize_resume_response(resume: Resume) -> ResumeResponse:

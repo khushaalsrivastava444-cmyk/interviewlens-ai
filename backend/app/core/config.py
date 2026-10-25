@@ -13,14 +13,23 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 24 hours
     
     # Database
-    DATABASE_URL: str = Field(default="sqlite:///./interviewlens.db")
+    DATABASE_URL: str = Field(
+        default="sqlite:////tmp/interviewlens.db" if os.getenv("VERCEL") else "sqlite:///./interviewlens.db"
+    )
     
     # Storage
     STORAGE_DIR: str = Field(
         default=os.path.join(
-            os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+            "/tmp" if os.getenv("VERCEL") else os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
             "storage",
             "uploads"
+        )
+    )
+    RESUME_STORAGE_DIR: str = Field(
+        default=os.path.join(
+            "/tmp" if os.getenv("VERCEL") else os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+            "storage",
+            "resumes"
         )
     )
     MAX_UPLOAD_SIZE_BYTES: int = 150 * 1024 * 1024  # 150MB limit
