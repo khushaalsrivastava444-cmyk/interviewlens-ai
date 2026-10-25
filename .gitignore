@@ -35,8 +35,11 @@ htmlcov/
 # Databases & Storage
 *.db
 *.sqlite3
-storage/uploads/*
-!storage/uploads/.gitkeep
+storage/
+backend/storage/
+backend/app/storage/
+*.mp4
+*.wav
 
 # Node.js
 node_modules/

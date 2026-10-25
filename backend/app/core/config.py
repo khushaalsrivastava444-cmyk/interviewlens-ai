@@ -1,7 +1,8 @@
 import os
-from typing import List
+import json
+from typing import List, Union, Any
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import Field
+from pydantic import Field, field_validator
 
 
 class Settings(BaseSettings):
@@ -31,7 +32,21 @@ class Settings(BaseSettings):
         "http://localhost:3000",
         "http://127.0.0.1:3000",
         "http://localhost:8000",
+        "https://*.vercel.app",
     ]
+
+    @field_validator("BACKEND_CORS_ORIGINS", mode="before")
+    @classmethod
+    def assemble_cors_origins(cls, v: Any) -> List[str]:
+        if isinstance(v, str):
+            if v == "*":
+                return ["*"]
+            if v.startswith("[") and v.endswith("]"):
+                return json.loads(v)
+            return [i.strip() for i in v.split(",") if i.strip()]
+        elif isinstance(v, list):
+            return v
+        return ["http://localhost:3000", "http://127.0.0.1:3000"]
 
     # AI Model Providers
     AI_PROVIDER: str = Field(default="mock")  # mock, openai, gemini, huggingface
